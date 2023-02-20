@@ -1,0 +1,20 @@
+// General Style
+html {
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    -webkit-box-sizing: inherit;
+        -moz-box-sizing: inherit;
+            box-sizing: inherit;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: none;
+}
