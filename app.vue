@@ -22,24 +22,36 @@
             <input type="checkbox">
             <span class="todo__item-checkmark"></span>
           </label>
+          <button class="btn-secondary">
+            <img src="~/assets/images/icon-cross.svg" alt="remove">
+          </button>
         </li>
         <li class="todo__list-item">
           <label class="todo__item-checkbox">One
             <input type="checkbox">
             <span class="todo__item-checkmark"></span>
           </label>
+          <button class="btn-secondary">
+            <img src="~/assets/images/icon-cross.svg" alt="remove">
+          </button>
         </li>
         <li class="todo__list-item">
           <label class="todo__item-checkbox">One
             <input type="checkbox">
             <span class="todo__item-checkmark"></span>
           </label>
+          <button class="btn-secondary">
+            <img src="~/assets/images/icon-cross.svg" alt="remove">
+          </button>
         </li>
         <li class="todo__list-item">
           <label class="todo__item-checkbox">One
             <input type="checkbox">
             <span class="todo__item-checkmark"></span>
           </label>
+          <button class="btn-secondary">
+            <img src="~/assets/images/icon-cross.svg" alt="remove">
+          </button>
         </li>
         <div class="todo__list-actions">
           <div class="todo__list-left">5 items left</div>
@@ -51,6 +63,9 @@
           <button class="btn-secondary todo__list-clear">Clear Completed</button>
         </div>
       </ul>
+      <p class="todo__dnd">
+        Drag and drop to reorder list
+      </p>
     </div>
   </div>
 </template>
@@ -95,11 +110,6 @@
     font-weight: 700;
   }
 
-  // &__theme {
-  //   background-color: transparent;
-  //   border: none;
-  // }
-
   &__add,
   &__list {
     border-radius: 4px;
@@ -138,12 +148,20 @@
 
   &__list {
     list-style: none;
-    margin: 0;
+    margin: 0 0 30px 0;
     padding: 0;
 
     &-item {
       padding: 20px;
       border-bottom: 1px solid #575555;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .btn-secondary {
+        display: flex;
+        cursor: pointer;
+      }
     }
 
     &-actions {
@@ -180,6 +198,7 @@
     user-select: none;
     color: #ccc;
     line-height: 24px;
+    flex-grow: 1;
 
     /* On mouse-over, add a grey background color */
     &:hover input ~ .checkmark {
@@ -231,6 +250,41 @@
       -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
       transform: rotate(45deg);
+    }
+  }
+
+  &__dnd {
+    color: #7d7d7d;
+    text-align: center;
+  }
+
+  @media only screen and (max-width: 768px) {
+    &__container {
+      width: calc(100% - 48px);
+      margin-top: 60px;
+    }
+
+    &__list {
+      margin-bottom: 120px;
+      
+      &-actions {
+        flex-wrap: wrap;
+        position: relative;
+      }
+
+      &-statuses {
+        flex-basis: 100%;
+        order: 1;
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        top: 80px;
+        border-radius: 4px;
+        background-color: #25273d;
+        width: 100%;
+        left: 0;
+        padding: 20px;
+      }
     }
   }
 }
