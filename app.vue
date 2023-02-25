@@ -1,13 +1,26 @@
+<script setup>
+import { ref } from 'vue';
+
+const darkTheme = ref(true);
+const srcTheme = ref();
+const counter = ref(0);
+
+function switchTheme() {
+  darkTheme.value = !darkTheme.value;
+}
+</script>
+
 <template>
-  <div class="todo">
+  <div class="todo" :class="{ light: !darkTheme }">
     <div class="todo__background">
       <img src="/bg-desktop-dark.jpg" alt="background">
     </div>
     <div class="todo__container">
       <div class="todo__header">
         <div class="todo__title">TODO</div>
-        <button class="btn-secondary todo__theme">
-          <img src="~/assets/images/icon-sun.svg" alt="theme">
+        <button class="btn-secondary todo__theme" @click="switchTheme">
+          <img v-if="darkTheme" src="~/assets/images/icon-sun.svg" alt="theme">
+          <img v-else src="~/assets/images/icon-moon.svg" alt="theme">
         </button>
       </div>
       <div class="todo__add">
@@ -134,9 +147,12 @@
     }
 
     &-input {
+      flex-grow: 1;
+
       input {
         background-color: transparent;
         border: none;
+        width: 100%;
         color: #ccc;
 
         &:focus {
@@ -201,8 +217,16 @@
     flex-grow: 1;
 
     /* On mouse-over, add a grey background color */
-    &:hover input ~ .checkmark {
-      background-color: #ccc;
+    &:hover {
+      input {
+        &:checked ~ .todo__item-checkmark:before {
+          background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%);
+        }
+      }
+      
+      .todo__item-checkmark {
+        background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%);
+      }
     }
 
     /* Hide the browser's default checkbox */
@@ -216,6 +240,10 @@
       /* When the checkbox is checked, add a blue background */
       &:checked ~ .todo__item-checkmark  {
         background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%);
+
+        &:before {
+          background: inherit;
+        }
 
         /* Show the checkmark when checked */
         &:after {
@@ -232,8 +260,21 @@
     left: 0;
     height: 24px;
     width: 24px;
-    background-color: #eee;
     border-radius: 50%;
+    background: linear-gradient(to right, #4a4a4a 0%, #4a4a4a 100%);
+    border: none;
+
+    &:before {
+      content: "";
+      background-color: #25273d;
+      width: calc(100% - 2px);
+      height: calc(100% - 2px);
+      position: absolute;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
 
     /* Create the checkmark/indicator (hidden when not checked) */
     /* Style the checkmark/indicator */
@@ -258,6 +299,10 @@
     text-align: center;
   }
 
+  &.light {
+
+  }
+
   @media only screen and (max-width: 768px) {
     &__container {
       width: calc(100% - 48px);
@@ -266,7 +311,7 @@
 
     &__list {
       margin-bottom: 120px;
-      
+
       &-actions {
         flex-wrap: wrap;
         position: relative;
