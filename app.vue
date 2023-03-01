@@ -13,7 +13,8 @@ function switchTheme() {
 <template>
   <div class="todo" :class="{ light: !darkTheme }">
     <div class="todo__background">
-      <img src="/bg-desktop-dark.jpg" alt="background">
+      <img v-if="darkTheme" src="/bg-desktop-dark.jpg" alt="background">
+      <img v-else src="/bg-desktop-light.jpg" alt="background">
     </div>
     <div class="todo__container">
       <div class="todo__header">
@@ -169,7 +170,7 @@ function switchTheme() {
 
     &-item {
       padding: 20px;
-      border-bottom: 1px solid #575555;
+      border-bottom: 1px solid #343232;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -225,7 +226,7 @@ function switchTheme() {
       }
       
       .todo__item-checkmark {
-        background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%);
+        background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%) !important;
       }
     }
 
@@ -300,7 +301,44 @@ function switchTheme() {
   }
 
   &.light {
+    background-color: #fafafa;
 
+    .todo__add,
+    .todo__list {
+      background-color: #fff;
+    }
+
+    .todo__add {
+      &-graphic {
+        border-color: #ccc;
+      }
+
+      &-input input {
+        color: #7b7474;
+      }
+    }
+
+    .todo__list {
+      box-shadow: 1px 11px 13px 0px #f3e9e9;
+
+      &-item {
+        border-color: #e8e8e8;
+      }
+    }
+
+    .todo__item {
+      &-checkbox {
+        color: #7b7474;
+      }
+
+      &-checkmark {
+        background: linear-gradient(to right, #ccc 0%, #ccc 100%);
+
+        &:before {
+          background-color: #fff;
+        }
+      }
+    }
   }
 
   @media only screen and (max-width: 768px) {
@@ -329,6 +367,15 @@ function switchTheme() {
         width: 100%;
         left: 0;
         padding: 20px;
+      }
+    }
+
+    &.light {
+      .todo__list {
+        &-statuses {
+          background-color: #fff;
+          box-shadow: 1px 11px 13px 0px #f3e9e9;
+        }
       }
     }
   }
