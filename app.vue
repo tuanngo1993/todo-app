@@ -1,13 +1,39 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, provide } from 'vue';
 
 const darkTheme = ref(true);
-const srcTheme = ref();
-const counter = ref(0);
+const newTask = ref('');
+const listItems = ref([]);
 
 function switchTheme() {
   darkTheme.value = !darkTheme.value;
 }
+
+function onSubmit() {
+  if(newTask.value !== '') {
+    listItems.value.push({
+      name: newTask.value,
+      completed: false
+    });
+
+    newTask.value = "";
+  }
+}
+
+function changeState(item) {
+  const indexItem = listItems.value.indexOf(item);
+  listItems.value[indexItem].completed = !listItems.value[indexItem].completed;
+}
+
+function remove(item) {
+  const indexItem = listItems.value.indexOf(item);
+  listItems.value.splice(indexItem, 1);
+}
+
+provide('list', {
+  changeState,
+  remove
+})
 </script>
 
 <template>
@@ -24,59 +50,13 @@ function switchTheme() {
           <img v-else src="~/assets/images/icon-moon.svg" alt="theme">
         </button>
       </div>
-      <div class="todo__add">
+      <form @submit.prevent="onSubmit" class="todo__add">
         <div class="todo__add-graphic"></div>
         <div class="todo__add-input">
-          <input type="text" placeholder="Create a new todo...">
+          <input v-model="newTask" type="text" placeholder="Create a new todo...">
         </div>
-      </div>
-      <ul class="todo__list">
-        <li class="todo__list-item">
-          <label class="todo__item-checkbox">One
-            <input type="checkbox">
-            <span class="todo__item-checkmark"></span>
-          </label>
-          <button class="btn-secondary">
-            <img src="~/assets/images/icon-cross.svg" alt="remove">
-          </button>
-        </li>
-        <li class="todo__list-item">
-          <label class="todo__item-checkbox">One
-            <input type="checkbox">
-            <span class="todo__item-checkmark"></span>
-          </label>
-          <button class="btn-secondary">
-            <img src="~/assets/images/icon-cross.svg" alt="remove">
-          </button>
-        </li>
-        <li class="todo__list-item">
-          <label class="todo__item-checkbox">One
-            <input type="checkbox">
-            <span class="todo__item-checkmark"></span>
-          </label>
-          <button class="btn-secondary">
-            <img src="~/assets/images/icon-cross.svg" alt="remove">
-          </button>
-        </li>
-        <li class="todo__list-item">
-          <label class="todo__item-checkbox">One
-            <input type="checkbox">
-            <span class="todo__item-checkmark"></span>
-          </label>
-          <button class="btn-secondary">
-            <img src="~/assets/images/icon-cross.svg" alt="remove">
-          </button>
-        </li>
-        <div class="todo__list-actions">
-          <div class="todo__list-left">5 items left</div>
-          <div class="todo__list-statuses">
-            <button class="btn-secondary todo__list-status">All</button>
-            <button class="btn-secondary todo__list-status">Active</button>
-            <button class="btn-secondary todo__list-status">Compelete</button>
-          </div>
-          <button class="btn-secondary todo__list-clear">Clear Completed</button>
-        </div>
-      </ul>
+      </form>
+      <List :items="listItems" />
       <p class="todo__dnd">
         Drag and drop to reorder list
       </p>
@@ -163,138 +143,6 @@ function switchTheme() {
     }
   }
 
-  &__list {
-    list-style: none;
-    margin: 0 0 30px 0;
-    padding: 0;
-
-    &-item {
-      padding: 20px;
-      border-bottom: 1px solid #343232;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .btn-secondary {
-        display: flex;
-        cursor: pointer;
-      }
-    }
-
-    &-actions {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px;
-      color: #7d7d7d;
-      align-items: center;
-      font-weight: 500;
-    }
-
-    &-left {
-      font-size: 14px;
-    }
-
-    &-status,
-    &-clear {
-      color: inherit;
-      cursor: pointer;
-
-      &:hover {
-        color: #7eb6e6;
-      }
-    }
-  }
-
-  /* Customize the label (the container) */
-  &__item-checkbox {
-    display: block;
-    position: relative;
-    padding-left: 46px;
-    cursor: pointer;
-    font-size: 16px;
-    user-select: none;
-    color: #ccc;
-    line-height: 24px;
-    flex-grow: 1;
-
-    /* On mouse-over, add a grey background color */
-    &:hover {
-      input {
-        &:checked ~ .todo__item-checkmark:before {
-          background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%);
-        }
-      }
-      
-      .todo__item-checkmark {
-        background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%) !important;
-      }
-    }
-
-    /* Hide the browser's default checkbox */
-    input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-
-      /* When the checkbox is checked, add a blue background */
-      &:checked ~ .todo__item-checkmark  {
-        background: linear-gradient(to right, #7eb6e6 0%, #a182ef 100%);
-
-        &:before {
-          background: inherit;
-        }
-
-        /* Show the checkmark when checked */
-        &:after {
-          display: block;
-        }
-      }
-    }
-  }
-
-  /* Create a custom checkbox */
-  &__item-checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 24px;
-    width: 24px;
-    border-radius: 50%;
-    background: linear-gradient(to right, #4a4a4a 0%, #4a4a4a 100%);
-    border: none;
-
-    &:before {
-      content: "";
-      background-color: #25273d;
-      width: calc(100% - 2px);
-      height: calc(100% - 2px);
-      position: absolute;
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    /* Create the checkmark/indicator (hidden when not checked) */
-    /* Style the checkmark/indicator */
-    &:after {
-      content: "";
-      position: absolute;
-      display: none;
-      left: 10px;
-      top: 6px;
-      width: 5px;
-      height: 10px;
-      border: solid white;
-      border-width: 0 3px 3px 0;
-      -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      transform: rotate(45deg);
-    }
-  }
-
   &__dnd {
     color: #7d7d7d;
     text-align: center;
@@ -345,29 +193,6 @@ function switchTheme() {
     &__container {
       width: calc(100% - 48px);
       margin-top: 60px;
-    }
-
-    &__list {
-      margin-bottom: 120px;
-
-      &-actions {
-        flex-wrap: wrap;
-        position: relative;
-      }
-
-      &-statuses {
-        flex-basis: 100%;
-        order: 1;
-        display: flex;
-        justify-content: center;
-        position: absolute;
-        top: 80px;
-        border-radius: 4px;
-        background-color: #25273d;
-        width: 100%;
-        left: 0;
-        padding: 20px;
-      }
     }
 
     &.light {
